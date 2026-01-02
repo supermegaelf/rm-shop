@@ -134,26 +134,20 @@ async def my_subscription_command_handler(
     active = await subscription_service.get_active_subscription_details(session, event.from_user.id)
 
     if not active:
-        text = get_text("subscription_not_active")
-
-        buy_button = InlineKeyboardButton(
-            text=get_text("menu_subscribe_inline"), callback_data="main_action:subscribe"
-        )
-        back_markup = get_back_to_main_menu_markup(current_lang, i18n)
-
-        kb = InlineKeyboardMarkup(inline_keyboard=[[buy_button], *back_markup.inline_keyboard])
-
         if isinstance(event, types.CallbackQuery):
             try:
                 await event.answer()
             except Exception:
                 pass
-            try:
-                await event.message.edit_text(text, reply_markup=kb)
-            except Exception:
-                await event.message.answer(text, reply_markup=kb)
+            from .start import send_main_menu
+            await send_main_menu(
+                event, settings, i18n_data, subscription_service, session, is_edit=True
+            )
         else:
-            await event.answer(text, reply_markup=kb)
+            from .start import send_main_menu
+            await send_main_menu(
+                event, settings, i18n_data, subscription_service, session, is_edit=False
+            )
         return
 
     end_date = active.get("end_date")

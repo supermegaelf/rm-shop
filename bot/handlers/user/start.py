@@ -72,9 +72,15 @@ async def send_main_menu(target_event: Union[types.Message,
                 "Method has_had_any_subscription is missing in SubscriptionService for send_main_menu!"
             )
 
+    has_active_sub = False
+    try:
+        has_active_sub = await subscription_service.has_active_subscription(session, user_id)
+    except Exception as e:
+        logging.warning(f"Failed to check active subscription for user {user_id} in send_main_menu: {e}")
+
     text = _(key="main_menu_greeting", user_name=user_full_name)
     reply_markup = get_main_menu_inline_keyboard(current_lang, i18n, settings,
-                                                 show_trial_button_in_menu)
+                                                 show_trial_button_in_menu, has_active_sub)
 
     target_message_obj: Optional[types.Message] = None
     if isinstance(target_event, types.Message):

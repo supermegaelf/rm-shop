@@ -9,7 +9,8 @@ def get_main_menu_inline_keyboard(
         lang: str,
         i18n_instance,
         settings: Settings,
-        show_trial_button: bool = False) -> InlineKeyboardMarkup:
+        show_trial_button: bool = False,
+        has_active_subscription: bool = False) -> InlineKeyboardMarkup:
     _ = lambda key, **kwargs: i18n_instance.gettext(lang, key, **kwargs)
     builder = InlineKeyboardBuilder()
 
@@ -18,15 +19,16 @@ def get_main_menu_inline_keyboard(
             InlineKeyboardButton(text=_(key="menu_activate_trial_button"),
                                  callback_data="main_action:request_trial"))
 
-    builder.row(
-        InlineKeyboardButton(
-            text=_(key="menu_my_subscription_inline"),
-            callback_data="main_action:my_subscription",
+    if has_active_subscription:
+        builder.row(
+            InlineKeyboardButton(
+                text=_(key="menu_my_subscription_inline"),
+                callback_data="main_action:my_subscription",
+            )
         )
-    )
-    builder.row(
-        InlineKeyboardButton(text=_(key="menu_subscribe_inline"),
-                             callback_data="main_action:subscribe"))
+        builder.row(
+            InlineKeyboardButton(text=_(key="menu_subscribe_inline"),
+                                 callback_data="main_action:subscribe"))
 
     referral_button = InlineKeyboardButton(
         text=_(key="menu_referral_inline"),

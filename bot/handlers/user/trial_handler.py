@@ -44,11 +44,17 @@ async def request_trial_confirmation_handler(
         if not await subscription_service.has_had_any_subscription(session, user_id):
             show_trial_btn_in_menu_if_fail = True
 
+    has_active_sub = False
+    try:
+        has_active_sub = await subscription_service.has_active_subscription(session, user_id)
+    except Exception as e:
+        logging.warning(f"Failed to check active subscription for user {user_id} in trial handler: {e}")
+
     if not settings.TRIAL_ENABLED:
         await callback.message.edit_text(
             _("trial_feature_disabled"),
             reply_markup=get_main_menu_inline_keyboard(
-                current_lang, i18n, settings, False
+                current_lang, i18n, settings, False, has_active_sub
             ),
         )
         try:
@@ -61,7 +67,7 @@ async def request_trial_confirmation_handler(
         await callback.message.edit_text(
             _("trial_already_had_subscription_or_trial"),
             reply_markup=get_main_menu_inline_keyboard(
-                current_lang, i18n, settings, False
+                current_lang, i18n, settings, False, has_active_sub
             ),
         )
         try:
@@ -144,6 +150,15 @@ async def request_trial_confirmation_handler(
         ):
             show_trial_button_after_action = True
 
+    has_active_sub_after = False
+    if activation_result and activation_result.get("activated"):
+        has_active_sub_after = True
+    else:
+        try:
+            has_active_sub_after = await subscription_service.has_active_subscription(session, user_id)
+        except Exception as e:
+            logging.warning(f"Failed to check active subscription for user {user_id} after trial activation: {e}")
+
     reply_markup = (
         get_connect_and_main_keyboard(
             current_lang,
@@ -154,7 +169,7 @@ async def request_trial_confirmation_handler(
         )
         if activation_result and activation_result.get("activated")
         else get_main_menu_inline_keyboard(
-            current_lang, i18n, settings, show_trial_button_after_action
+            current_lang, i18n, settings, show_trial_button_after_action, has_active_sub_after
         )
     )
 
@@ -284,6 +299,15 @@ async def confirm_activate_trial_handler(
         ):
             show_trial_button_after_action = True
 
+    has_active_sub_after = False
+    if activation_result and activation_result.get("activated"):
+        has_active_sub_after = True
+    else:
+        try:
+            has_active_sub_after = await subscription_service.has_active_subscription(session, user_id)
+        except Exception as e:
+            logging.warning(f"Failed to check active subscription for user {user_id} after trial activation: {e}")
+
     reply_markup = (
         get_connect_and_main_keyboard(
             current_lang,
@@ -294,7 +318,7 @@ async def confirm_activate_trial_handler(
         )
         if activation_result and activation_result.get("activated")
         else get_main_menu_inline_keyboard(
-            current_lang, i18n, settings, show_trial_button_after_action
+            current_lang, i18n, settings, show_trial_button_after_action, has_active_sub_after
         )
     )
 
