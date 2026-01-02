@@ -428,7 +428,7 @@
   "admin_payments_pagination_info": "📊 Showing {shown} of {total} payments (page {current_page}/{total_pages})",
   "admin_payment_traffic_label": "🗂 Traffic: <b>{traffic_gb} GB</b>",
   "admin_payment_months_label": "📅 Period: <b>{months} mo.</b>",
-  "my_subscription_details": "<b>My Subscription</b> 🔐\n\nStatus: <b>{status}</b>\nActive until: <b>{end_date}</b>\nDays left: <b>{days_left}</b>\n\nConfiguration link:\n<code>{config_link}</code> 🔗\n\nTraffic:\nLimit: <b>{traffic_limit}</b>\nUsed: <b>{traffic_used}</b>",
+  "my_subscription_details": "<b>My Subscription</b> 🔐\n\nStatus: <b>{status}</b>\nActive until: <b>{end_date}</b>\nDays left: <b>{days_left}</b>\n\nTraffic:\nLimit: <b>{traffic_limit}</b>\nUsed: <b>{traffic_used}</b>",
   "my_traffic_details": "🔐 <b>My Traffic</b>\n\n⏰ Status: <b>{status}</b>\n📅 Valid until: <b>{end_date}</b>\n\n📊 Traffic:\nLimit: <b>{traffic_limit}</b>\nUsed: <b>{traffic_used}</b>\nLeft: <b>{traffic_left}</b>",
   "traffic_no_expiry": "no limit",
   "autorenew_enable_button": "🔄 Enable auto-renew",
