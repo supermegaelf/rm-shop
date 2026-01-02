@@ -1,30 +1,31 @@
 services:
-  remnawave-tg-shop:
-    image: ghcr.io/machka-pasla/remnawave-tg-shop:latest
-#    build: .
-    container_name: remnawave-tg-shop
-    hostname: remnawave-tg-shop
+  rm-shop:
+    build: .
+    container_name: rm-shop
+    hostname: rm-shop
     env_file:
       - .env
     ports:
-      - "127.0.0.1:8777:8777"
+      - '127.0.0.1:8777:8777'
     networks:
       - remnawave-network
+    environment:
+      - TZ=Europe/Moscow
     volumes:
       - ./locales:/app/locales
     restart: unless-stopped
     depends_on:
-      remnawave-tg-shop-db:
-        condition: service_healthy
-
-  remnawave-tg-shop-db:
+      - rm-shop-db
+  rm-shop-db:
     image: postgres:17
-    container_name: remnawave-tg-shop-db
-    hostname: remnawave-tg-shop-db
+    container_name: rm-shop-db
+    hostname: rm-shop-db
     env_file:
       - .env
+    environment:
+      - TZ=Europe/Moscow
     volumes:
-      - remnawave-tg-shop-db-data:/var/lib/postgresql/data
+      - rm-shop-db-data:/var/lib/postgresql/data
     networks:
       - remnawave-network
     restart: unless-stopped
@@ -33,11 +34,8 @@ services:
       interval: 5s
       timeout: 5s
       retries: 20
-
 networks:
-  remnawave-network:
-    external: true
-
+  remnawave-network: null
 volumes:
-  remnawave-tg-shop-db-data:
-    name: remnawave-tg-shop-db-data
+  rm-shop-db-data:
+    name: rm-shop-db-data
