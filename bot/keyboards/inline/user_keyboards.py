@@ -19,14 +19,14 @@ def get_main_menu_inline_keyboard(
                                  callback_data="main_action:request_trial"))
 
     builder.row(
-        InlineKeyboardButton(text=_(key="menu_subscribe_inline"),
-                             callback_data="main_action:subscribe"))
-    builder.row(
         InlineKeyboardButton(
             text=_(key="menu_my_subscription_inline"),
             callback_data="main_action:my_subscription",
         )
     )
+    builder.row(
+        InlineKeyboardButton(text=_(key="menu_subscribe_inline"),
+                             callback_data="main_action:subscribe"))
 
     referral_button = InlineKeyboardButton(
         text=_(key="menu_referral_inline"),
@@ -34,7 +34,8 @@ def get_main_menu_inline_keyboard(
     promo_button = InlineKeyboardButton(
         text=_(key="menu_apply_promo_button"),
         callback_data="main_action:apply_promo")
-    builder.row(referral_button, promo_button)
+    builder.row(promo_button)
+    builder.row(referral_button)
 
     language_button = InlineKeyboardButton(
         text=_(key="menu_language_settings_inline"),
