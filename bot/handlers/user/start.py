@@ -14,7 +14,6 @@ from db.models import User
 
 from bot.keyboards.inline.user_keyboards import (
     get_main_menu_inline_keyboard,
-    get_language_selection_keyboard,
     get_channel_subscription_keyboard,
 )
 from bot.services.subscription_service import SubscriptionService
@@ -573,88 +572,6 @@ async def verify_channel_subscription_callback(
                          is_edit=bool(callback.message))
 
 
-@router.message(Command("language"))
-@router.callback_query(F.data == "main_action:language")
-async def language_command_handler(
-    event: Union[types.Message, types.CallbackQuery],
-    i18n_data: dict,
-    settings: Settings,
-):
-    current_lang = i18n_data.get("current_language", settings.DEFAULT_LANGUAGE)
-    i18n: Optional[JsonI18n] = i18n_data.get("i18n_instance")
-    _ = lambda key, **kwargs: i18n.gettext(current_lang, key, **kwargs
-                                           ) if i18n else key
-
-    text_to_send = _(key="choose_language")
-    reply_markup = get_language_selection_keyboard(i18n, current_lang)
-
-    target_message_obj = event.message if isinstance(
-        event, types.CallbackQuery) else event
-    if not target_message_obj:
-        if isinstance(event, types.CallbackQuery):
-            await event.answer(_("error_occurred_try_again"), show_alert=True)
-        return
-
-    if isinstance(event, types.CallbackQuery):
-        if event.message:
-            try:
-                await event.message.edit_text(text_to_send,
-                                              reply_markup=reply_markup)
-            except Exception:
-                await target_message_obj.answer(text_to_send,
-                                                reply_markup=reply_markup)
-        await event.answer()
-    else:
-        await target_message_obj.answer(text_to_send,
-                                        reply_markup=reply_markup)
-
-
-@router.callback_query(F.data.startswith("set_lang_"))
-async def select_language_callback_handler(
-        callback: types.CallbackQuery, i18n_data: dict, settings: Settings,
-        subscription_service: SubscriptionService, session: AsyncSession):
-    i18n: Optional[JsonI18n] = i18n_data.get("i18n_instance")
-    if not i18n or not callback.message:
-        await callback.answer("Service error or message context lost.",
-                              show_alert=True)
-        return
-
-    try:
-        lang_code = callback.data.split("_")[2]
-    except IndexError:
-        await callback.answer("Error processing language selection.",
-                              show_alert=True)
-        return
-
-    user_id = callback.from_user.id
-    try:
-        updated = await user_dal.update_user_language(session, user_id,
-                                                      lang_code)
-        if updated:
-
-            i18n_data["current_language"] = lang_code
-            _ = lambda key, **kwargs: i18n.gettext(lang_code, key, **kwargs)
-            await callback.answer(_(key="language_set_alert"))
-            logging.info(
-                f"User {user_id} language updated to {lang_code} in session.")
-        else:
-            await callback.answer("Could not set language.", show_alert=True)
-            return
-    except Exception as e_lang_update:
-
-        logging.error(
-            f"Error updating lang for user {user_id}: {e_lang_update}",
-            exc_info=True)
-        await callback.answer("Error setting language.", show_alert=True)
-        return
-    await send_main_menu(callback,
-                         settings,
-                         i18n_data,
-                         subscription_service,
-                         session,
-                         is_edit=True)
-
-
 @router.callback_query(F.data.startswith("main_action:"))
 async def main_action_callback_handler(
         callback: types.CallbackQuery, state: FSMContext, settings: Settings,
@@ -693,9 +610,6 @@ async def main_action_callback_handler(
     elif action == "request_trial":
         await user_trial_handlers.request_trial_confirmation_handler(
             callback, settings, i18n_data, subscription_service, session)
-    elif action == "language":
-
-        await language_command_handler(callback, i18n_data, settings)
     elif action == "back_to_main":
         await send_main_menu(callback,
                              settings,

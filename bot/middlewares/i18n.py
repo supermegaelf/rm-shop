@@ -128,6 +128,17 @@ class I18nMiddleware(BaseMiddleware):
         self.i18n = i18n
         self.settings = settings
 
+    def _normalize_language_code(self, lang_code: Optional[str]) -> Optional[str]:
+        if not lang_code:
+            return None
+        lang_prefix = lang_code.split('-')[0].lower()
+        if lang_prefix in self.i18n.locales_data:
+            return lang_prefix
+        lang_lower = lang_code.lower()
+        if lang_lower in self.i18n.locales_data:
+            return lang_lower
+        return None
+
     async def __call__(self, handler: Callable[[Update, Dict[str, Any]],
                                                Awaitable[Any]], event: Update,
                        data: Dict[str, Any]) -> Any:
@@ -140,28 +151,50 @@ class I18nMiddleware(BaseMiddleware):
             try:
                 user_db_model = await user_dal.get_user_by_id(
                     session, event_user.id)
-                if user_db_model and user_db_model.language_code and user_db_model.language_code in self.i18n.locales_data:
-                    current_language = user_db_model.language_code
+                
+                telegram_lang = None
+                if event_user.language_code:
+                    telegram_lang = self._normalize_language_code(event_user.language_code)
+                
+                if user_db_model:
+                    if user_db_model.language_code and user_db_model.language_code in self.i18n.locales_data:
+                        current_language = user_db_model.language_code
+                        if telegram_lang and telegram_lang != user_db_model.language_code:
+                            try:
+                                await user_dal.update_user_language(session, event_user.id, telegram_lang)
+                                current_language = telegram_lang
+                            except Exception as e_update:
+                                logging.warning(
+                                    f"I18nMiddleware: Failed to update language for user {event_user.id}: {e_update}")
+                    elif telegram_lang:
+                        current_language = telegram_lang
+                        try:
+                            await user_dal.update_user_language(session, event_user.id, telegram_lang)
+                        except Exception as e_update:
+                            logging.warning(
+                                f"I18nMiddleware: Failed to update language for user {event_user.id}: {e_update}")
+                    elif event_user.language_code:
+                        lang_prefix = event_user.language_code.split('-')[0].lower()
+                        if lang_prefix in self.i18n.locales_data:
+                            current_language = lang_prefix
+                        elif event_user.language_code.lower() in self.i18n.locales_data:
+                            current_language = event_user.language_code.lower()
+                elif telegram_lang:
+                    current_language = telegram_lang
                 elif event_user.language_code:
-                    lang_prefix = event_user.language_code.split(
-                        '-')[0].lower()
+                    lang_prefix = event_user.language_code.split('-')[0].lower()
                     if lang_prefix in self.i18n.locales_data:
                         current_language = lang_prefix
-                    elif event_user.language_code.lower(
-                    ) in self.i18n.locales_data:
+                    elif event_user.language_code.lower() in self.i18n.locales_data:
                         current_language = event_user.language_code.lower()
             except Exception as e_db_lang:
                 logging.error(
                     f"I18nMiddleware: Error fetching user lang from DB for {event_user.id}: {e_db_lang}. Falling back.",
                     exc_info=True)
                 if event_user.language_code:
-                    lang_prefix = event_user.language_code.split(
-                        '-')[0].lower()
-                    if lang_prefix in self.i18n.locales_data:
-                        current_language = lang_prefix
-                    elif event_user.language_code.lower(
-                    ) in self.i18n.locales_data:
-                        current_language = event_user.language_code.lower()
+                    normalized = self._normalize_language_code(event_user.language_code)
+                    if normalized:
+                        current_language = normalized
 
         data["i18n_data"] = {
             "i18n_instance": self.i18n,
