@@ -8,7 +8,7 @@
   "main_menu_greeting": "Hello, {user_name} 👋\n\nSelect an option ⬇️",
   "menu_activate_trial_button": "5 days free 🆓",
   "menu_subscribe_inline": "Renew 💳",
-  "menu_my_subscription_inline": "My subscription ⭐",
+  "menu_my_subscription_inline": "Subscription ⭐",
   "no_subscription_options_available": "Subscription issuance is not configured by the bot administrator",
   "menu_referral_inline": "Referrals 🔗",
   "referral_no_bonuses_configured": "Sorry, the referral program is currently disabled",
@@ -46,7 +46,7 @@
   "pay_with_cryptopay_button": "💎 CryptoBot",
   "pay_with_stars_button": "🌟 Telegram Stars",
   "connect_button": "🔗 Connect",
-  "cancel_button": "❌ Cancel",
+  "cancel_button": "⬅️ Back",
 
   "devices_button": "📱 My Devices ({current_devices}/{max_devices})",
   "my_devices_details": "📱 <b>My Devices ({current_devices}/{max_devices})</b>\n\n{devices}\n\nYou can disconnect a device by selecting it from the list below.\n<blockquote><i>Note: If you disconnect a device, it will be automatically connected again when you use it next. Before deleting, make sure you have deleted the subscription from the application.</i></blockquote>",

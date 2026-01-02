@@ -8,7 +8,7 @@
   "main_menu_greeting": "Здравствуйте, {user_name} 👋\n\nВыберите вариант ⬇️",
   "menu_activate_trial_button": "5 дней бесплатно 🆓",
   "menu_subscribe_inline": "Продлить 💳",
-  "menu_my_subscription_inline": "Моя подписка ⭐",
+  "menu_my_subscription_inline": "Подписка ⭐",
   "no_subscription_options_available": "Выдача подписки не настроена администратором бота",
   "menu_referral_inline": "Рефералы 🔗",
   "referral_no_bonuses_configured": "Извините, реферальная программа в данный момент отключена",
@@ -57,7 +57,7 @@
   "devices_unlimited_label": "Без ограничений",
   "my_devices_feature_disabled": "Раздел \"Мои устройства\" сейчас недоступен.",
 
-  "cancel_button": "❌ Отмена",
+  "cancel_button": "⬅️ Назад",
   "payment_description_subscription": "Оплата подписки на {months} мес.",
   "payment_description_traffic": "Пакет трафика {traffic_gb} ГБ",
   "payment_link_message": "Для оплаты подписки на {months} мес., нажмите кнопку ниже:",
