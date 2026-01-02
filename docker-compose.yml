@@ -6,6 +6,8 @@ services:
     hostname: remnawave-tg-shop
     env_file:
       - .env
+    ports:
+      - "127.0.0.1:8777:8777"
     networks:
       - remnawave-network
     volumes:
