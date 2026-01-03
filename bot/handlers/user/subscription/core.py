@@ -17,6 +17,7 @@ from bot.keyboards.inline.user_keyboards import (
 from bot.services.subscription_service import SubscriptionService
 from bot.services.panel_api_service import PanelApiService
 from bot.middlewares.i18n import JsonI18n
+from bot.utils.date_utils import format_date_localized
 from db.dal import subscription_dal, user_billing_dal
 from db.models import Subscription
 
@@ -192,7 +193,7 @@ async def my_subscription_command_handler(
         text = get_text(
             "my_traffic_details",
             status=_get_localized_status(active.get("status_from_panel")),
-            end_date=end_date.strftime("%Y-%m-%d") if end_date else get_text("traffic_no_expiry"),
+            end_date=format_date_localized(end_date, current_lang) if end_date else get_text("traffic_no_expiry"),
             traffic_limit=limit_display,
             traffic_used=used_display,
             traffic_left=remaining_display,
@@ -201,7 +202,7 @@ async def my_subscription_command_handler(
     else:
         text = get_text(
             "my_subscription_details",
-            end_date=end_date.strftime("%Y-%m-%d") if end_date else "N/A",
+            end_date=format_date_localized(end_date, current_lang) if end_date else "N/A",
             days_left=max(0, days_left),
             status=_get_localized_status(active.get("status_from_panel")),
             config_link=config_link_value,
