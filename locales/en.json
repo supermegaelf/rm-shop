@@ -467,6 +467,7 @@
   "error_payment_gateway_link_failed": "Error creating payment link. Please try again later.",
   "status_active": "Active",
   "status_inactive": "Inactive",
+  "unit_gb": "GB",
   "admin_ads_section": "📈 Ads",
   "admin_ads_header": "📈 Ad Campaigns:",
   "admin_ads_empty": "📭 No ad campaigns. Click \"Create\" to add one.",

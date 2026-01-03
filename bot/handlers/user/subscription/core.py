@@ -156,13 +156,24 @@ async def my_subscription_command_handler(
     config_link_display = active.get("config_link")
     connect_button_url = active.get("connect_button_url")
     config_link_value = config_link_display or get_text("config_link_not_available")
+    
+    def _get_localized_status(status_from_panel: Optional[str]) -> str:
+        if not status_from_panel:
+            return get_text("status_active")
+        status_lower = status_from_panel.lower()
+        if status_lower == "active":
+            return get_text("status_active")
+        elif status_lower == "inactive":
+            return get_text("status_inactive")
+        return status_from_panel
+    
     def _fmt_gb(val: Optional[float]) -> str:
         if val is None:
             return get_text("traffic_na")
         try:
             if isinstance(val, (int, float)):
                 val_gb = float(val) / (2**30)
-                return f"{val_gb:.2f} GB"
+                return f"{val_gb:.2f} {get_text('unit_gb')}"
         except Exception:
             pass
         return str(val)
@@ -180,7 +191,7 @@ async def my_subscription_command_handler(
             pass
         text = get_text(
             "my_traffic_details",
-            status=active.get("status_from_panel", get_text("status_active")).capitalize(),
+            status=_get_localized_status(active.get("status_from_panel")),
             end_date=end_date.strftime("%Y-%m-%d") if end_date else get_text("traffic_no_expiry"),
             traffic_limit=limit_display,
             traffic_used=used_display,
@@ -192,11 +203,11 @@ async def my_subscription_command_handler(
             "my_subscription_details",
             end_date=end_date.strftime("%Y-%m-%d") if end_date else "N/A",
             days_left=max(0, days_left),
-            status=active.get("status_from_panel", get_text("status_active")).capitalize(),
+            status=_get_localized_status(active.get("status_from_panel")),
             config_link=config_link_value,
-            traffic_limit=(f"{active['traffic_limit_bytes'] / 2**30:.2f} GB" if active.get("traffic_limit_bytes") else get_text("traffic_unlimited")),
+            traffic_limit=(f"{active['traffic_limit_bytes'] / 2**30:.2f} {get_text('unit_gb')}" if active.get("traffic_limit_bytes") else get_text("traffic_unlimited")),
             traffic_used=(
-                f"{active['traffic_used_bytes'] / 2**30:.2f} GB" if active.get("traffic_used_bytes") is not None else get_text("traffic_na")
+                f"{active['traffic_used_bytes'] / 2**30:.2f} {get_text('unit_gb')}" if active.get("traffic_used_bytes") is not None else get_text("traffic_na")
             ),
         )
 

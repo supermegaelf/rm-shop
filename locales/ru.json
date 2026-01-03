@@ -467,6 +467,7 @@
   "error_payment_gateway_link_failed": "Ошибка создания платежной ссылки. Попробуйте позже.",
   "status_active": "Активна",
   "status_inactive": "Неактивна",
+  "unit_gb": "ГБ",
   "admin_ads_section": "📈 Реклама",
   "admin_ads_header": "📈 Рекламные кампании:",
   "admin_ads_empty": "📭 Рекламные кампании отсутствуют. Нажмите \"Создать\" чтобы добавить новую.",
