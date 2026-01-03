@@ -46,6 +46,8 @@
   "pay_with_cryptopay_button": "💎 CryptoBot",
   "pay_with_stars_button": "🌟 Звезды Telegram",
   "connect_button": "Установить ⚙️",
+  "button_share": "Поделиться 🔗",
+  "share_subscription_message": "\n\nПерейдите по ссылке ниже, чтобы установить VPN ⬇️\n\n{link}",
 
   "devices_button": "📱 Мои устройства ({current_devices}/{max_devices})",
   "my_devices_details": "📱 <b>Список ваших устройств ({current_devices}/{max_devices})</b>\n\n{devices}\n\nВы можете отключить устройство, выбрав его в списке ниже.\n<blockquote><i>Примечание: Если вы отключили устройство, оно будет автоматически подключено заново при следующем использовании. Перед удалением убедитесь, что вы удалили подписку из приложения.</i></blockquote>",

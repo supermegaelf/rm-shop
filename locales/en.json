@@ -46,6 +46,8 @@
   "pay_with_cryptopay_button": "💎 CryptoBot",
   "pay_with_stars_button": "🌟 Telegram Stars",
   "connect_button": "Install ⚙️",
+  "button_share": "Share 🔗",
+  "share_subscription_message": "\n\nFollow the link below to install VPN ⬇️\n\n{link}",
   "cancel_button": "⬅️ Back",
 
   "devices_button": "📱 My Devices ({current_devices}/{max_devices})",

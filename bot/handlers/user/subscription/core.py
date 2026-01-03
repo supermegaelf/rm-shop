@@ -225,6 +225,15 @@ async def my_subscription_command_handler(
                     )
                 ])
 
+        if config_link_display:
+            share_message_text = get_text("share_subscription_message", link=config_link_display)
+            prepend_rows.append([
+                InlineKeyboardButton(
+                    text=get_text("button_share"),
+                    switch_inline_query=share_message_text
+                )
+            ])
+
         if settings.MY_DEVICES_SECTION_ENABLED:
             max_devices_value = active.get("max_devices")
             max_devices_display = get_text("devices_unlimited_label")
